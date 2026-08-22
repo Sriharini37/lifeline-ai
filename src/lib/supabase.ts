@@ -1,14 +1,40 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  realtime: { params: { eventsPerSecond: 10 } },
-});
+if (!supabaseUrl) {
+  throw new Error('VITE_SUPABASE_URL is missing');
+}
 
-export type Priority = 'CRITICAL' | 'HIGH' | 'MODERATE' | 'LOW' | 'UNKNOWN';
-export type IncidentStatus = 'PENDING' | 'REVIEWING' | 'DISPATCHED' | 'RESOLVED';
+if (!supabaseAnonKey) {
+  throw new Error('VITE_SUPABASE_ANON_KEY is missing');
+}
+
+export const supabase = createClient(
+  supabaseUrl,
+  supabaseAnonKey,
+  {
+    realtime: {
+      params: {
+        eventsPerSecond: 10,
+      },
+    },
+  }
+);
+
+export type Priority =
+  | 'CRITICAL'
+  | 'HIGH'
+  | 'MODERATE'
+  | 'LOW'
+  | 'UNKNOWN';
+
+export type IncidentStatus =
+  | 'PENDING'
+  | 'REVIEWING'
+  | 'DISPATCHED'
+  | 'RESOLVED';
 
 export interface ExtractedFields {
   peopleCount?: number | null;
